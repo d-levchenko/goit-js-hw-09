@@ -1,44 +1,34 @@
 const form = document.querySelector('.feedback-form');
-const inputField = document.querySelectorAll('.feedback-input');
-const commentField = document.querySelector('.feedback-comment');
+const { email, message } = form.elements;
 const localStorageKey = 'feedback-form-state';
 
+let formData = {
+  email: '',
+  message: '',
+};
+
 form.addEventListener('input', evt => {
-  const formData = {
-    email: form.elements.email.value,
-    comment: commentField.value,
-  };
+  formData[evt.target.name] = evt.target.name.value.trim();
   localStorage.setItem(localStorageKey, JSON.stringify(formData));
 });
 
-const saved = JSON.parse(localStorage.getItem(localStorageKey) ?? '{}');
-form.elements.email.value = saved.email ?? '';
-commentField.value = saved.comment ?? '';
+const saved = JSON.parse(localStorage.getItem(localStorageKey) ?? {});
+formData.email = saved.email ?? '';
+formData.message = saved.message ?? '';
 
 form.addEventListener('submit', evt => {
   evt.preventDefault();
 
-  let inputsData = {
-    email: form.elements.email.value,
-    comment: commentField.value,
-  };
-
-  for (const inputs of inputField) {
-    if (inputs.value === '') {
-      inputs.setCustomValidity('Fill please all fields');
-      inputs.reportValidity();
-      return false;
-    } else {
-      inputs.setCustomValidity('');
-      inputsData = {
-        email: inputs.value,
-        comment: commentField.value,
-      };
-    }
+  if (email.value.trim() === '' || message.value.trim() === '') {
+    return;
   }
 
-  localStorage.removeItem(localStorageKey);
-  console.log(inputsData);
+  console.log(formData);
   form.reset();
-  return true;
+  localStorage.removeItem(localStorageKey);
+
+  formData = {
+    email: '',
+    message: '',
+  };
 });
