@@ -7,19 +7,22 @@ let formData = {
   message: '',
 };
 
-form.addEventListener('input', evt => {
-  formData[evt.target.name] = evt.target.name.value.trim();
-  localStorage.setItem(localStorageKey, JSON.stringify(formData));
-});
-
-const saved = JSON.parse(localStorage.getItem(localStorageKey) ?? {});
+const saved = JSON.parse(localStorage.getItem(localStorageKey) ?? '{}');
 formData.email = saved.email ?? '';
 formData.message = saved.message ?? '';
+email.value = saved.email ?? '';
+message.value = saved.message ?? '';
+
+form.addEventListener('input', evt => {
+  formData[evt.target.name] = evt.target.value;
+  localStorage.setItem(localStorageKey, JSON.stringify(formData));
+});
 
 form.addEventListener('submit', evt => {
   evt.preventDefault();
 
   if (email.value.trim() === '' || message.value.trim() === '') {
+    alert('Fill please all fields');
     return;
   }
 
