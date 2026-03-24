@@ -7,7 +7,7 @@ let formData = {
   message: '',
 };
 
-const saved = JSON.parse(localStorage.getItem(localStorageKey) ?? '{}');
+const saved = JSON.parse(localStorage.getItem(localStorageKey)) ?? '{}';
 formData.email = saved.email ?? '';
 formData.message = saved.message ?? '';
 email.value = saved.email ?? '';
